@@ -50,7 +50,7 @@ function makeResponsive() {
     d3.csv("data/data.csv", function(err, stateData) {
         if (err) throw err;
     
-        // parse data
+        // parse data //turns strings to ints
         stateData.forEach(d=> {
             d.poverty = +d.poverty;
             d.age = +d.age;
@@ -94,6 +94,7 @@ function makeResponsive() {
             .attr("r", 20)
             .attr("fill", "lightblue");
 
+        // adds initial abbreviations to circles
         var abbrGroup = chartGroup.append("g")
             .classed("abbr", true)
             .selectAll("text")
@@ -107,6 +108,7 @@ function makeResponsive() {
             .style("alignment-baseline","middle")
             .text(d => d.abbr)
 
+        ///////////////////////////////////////
         // add tooltips for each abbr in circle
         abbrGroup = updateToolTip(chosenXAxis, chosenYAxis, abbrGroup);
 
@@ -167,11 +169,7 @@ function makeResponsive() {
             .attr("transform", "rotate(-90)")
             .text("Lacks Healthcare (%)");
     
-
-
-        // updateToolTip function above csv import
-        //var circlesGroup = updateToolTip(chosenXAxis,chosenYAxis, circlesGroup);
-    
+        ///////////////////////////////
         // x axis labels event listener
         xLabelsGroup.selectAll("text")
             .on("click", function() {
@@ -217,6 +215,7 @@ function makeResponsive() {
             }
         });
 
+        ////////////////////////////////
         // y axis labels event listener
         yLabelsGroup.selectAll("text")
             .on("click", function() {
@@ -299,21 +298,19 @@ function renderAxes(newScale, axis, flag)  ///flag == true (x-axis)
     return axis;
 }
 
-// function used for updating circles/text group with a transition to
-// new circles/text
+// function used for updating circles/abbr group with a transition to
+// new circles/abbr    //abbr text uses x,y || while circles use cx,cy
 function renderGroup(myGroup, newScale, chosenAxis, changedParam)  //changedParam can be (x,y,cx,cy)
 {
-
         myGroup.transition()
             .duration(1000)
             .attr( changedParam, d => newScale(d[chosenAxis]));
-
 
     return myGroup;
 }
 
 
-// function used for updating circles group with new tooltip
+// function used for updating abbreviation group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, abbrGroup) {
   
     var toolTip = d3.tip()
